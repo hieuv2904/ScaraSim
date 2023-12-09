@@ -26,7 +26,7 @@ function [p_robot, o_robot, ok] = ForwardKinematic(alpha_deg, a, theta_deg, d, w
 
     A0_2=A0_1*A1_2;
     A0_3=A0_1*A1_2*A2_3;
-    A0_4=A0_1*A1_2*A2_3*A3_4;   % Te
+    A0_4=A0_1*A1_2*A2_3*A3_4;  
 
     p0 = [0;0;0];
     [p1, o1] = cal_pose(A0_1,p0);
