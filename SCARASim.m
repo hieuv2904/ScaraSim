@@ -22,7 +22,7 @@ function varargout = SCARASim(varargin)
 
 % Edit the above text to modify the response to help SCARASim
 
-% Last Modified by GUIDE v2.5 05-Dec-2023 09:35:24
+% Last Modified by GUIDE v2.5 10-Dec-2023 23:40:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -504,14 +504,13 @@ set(handles.qva_Theta4_panel,'Visible','on');
 
 % --- Executes on button press in TrajectoryBtn.
 function TrajectoryBtn_Callback(hObject, eventdata, handles)
-global alpha a theta d working_limit pos orien;
+global alpha a theta d working_limit pos orien traj_mode;
 % hObject    handle to Setbutton_Inverse (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % global t
 
 a_max = str2double(get(handles.amax,'String'));
-%v_max = 6.3;
 v_max = [660 660 1120 1500];
 q1 = [];
 q2 = [];
@@ -573,71 +572,126 @@ if ok ~= 0
     q_max(2) = theta_2_new - theta_2_old; %goc theta 2
     q_max(3) = (d_3_new - d_3_old)*1000;         %d3
     q_max(4) = theta_4_new - theta_4_old; %goc theta 4
-    disp(q_max);
-    for joint = 1:1:4
-        [t_c(joint), q_tc(joint), t_f(joint)] = timeForLSPB(abs(q_max(joint)), v_max(joint), a_max);
-    end
-    
-    t_f_max = max(t_f);
-    t_f_min = min(t_f);
-    factor = floor(t_f_max/t_f_min) + 1;
-    disp('time tf');
-    disp(t_f);
-%     disp('time tf max');
-%     disp(t_f_max);
-%     disp('factor');
-%     disp(factor);
-%     disp('t f min/50');
-%     disp(t_f_min/50);
-%     disp(t_f_min*factor);
-    time = [];
-%     disp('----------------------------------------------------------');
-    for t = 0:t_f_min/50:(t_f_min*factor)
-        time = [time, t];
-%         disp('length time');
-%         disp(length(time)-1);
-        if t < t_f(1)
-            [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t);
-        else
-            [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t_f(1)-0.001);
-            a_link1 = 0;
+%     disp(q_max);
+    if traj_mode == '3 segment'
+        for joint = 1:1:4
+            [t_c(joint), q_tc(joint), t_f(joint)] = timeForLSPB(abs(q_max(joint)), v_max(joint), a_max);
         end
-        q1 = [q1, q_link1];
-        v1 = [v1, v_link1];
-        a1 = [a1, a_link1];
-        
-        if t < t_f(2)
-            [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t);
-        else
-            [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t_f(2)-0.001);
-            a_link2 = 0;
+
+        t_f_max = max(t_f);
+        t_f_min = min(t_f);
+        factor = floor(t_f_max/t_f_min) + 1;
+        disp('time tf');
+        disp(t_f);
+    %     disp('time tf max');
+    %     disp(t_f_max);
+    %     disp('factor');
+    %     disp(factor);
+    %     disp('t f min/50');
+    %     disp(t_f_min/50);
+    %     disp(t_f_min*factor);
+        time = [];
+    %     disp('----------------------------------------------------------');
+        for t = 0:t_f_min/50:(t_f_min*factor)
+            time = [time, t];
+    %         disp('length time');
+    %         disp(length(time)-1);
+            if t < t_f(1)
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t);
+            else
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t_f(1)-0.001);
+                a_link1 = 0;
+            end
+            q1 = [q1, q_link1];
+            v1 = [v1, v_link1];
+            a1 = [a1, a_link1];
+
+            if t < t_f(2)
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t);
+            else
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t_f(2)-0.001);
+                a_link2 = 0;
+            end
+            q2 = [q2, q_link2];
+            v2 = [v2, v_link2];
+            a2 = [a2, a_link2];
+
+            if t < t_f(3)
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t);
+            else
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t_f(3)-0.001);
+                a_link3 = 0;
+            end
+            q3 = [q3, q_link3];
+            v3 = [v3, v_link3];
+            a3 = [a3, a_link3];
+
+            if t < t_f(4)
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t);
+            else
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t_f(4)-0.001);
+                a_link4 = 0;
+            end
+            q4 = [q4, q_link4];
+            v4 = [v4, v_link4];
+            a4 = [a4, a_link4];
+    %         disp('time');
+    %         disp(t);
+    %         disp('-----------------------------------------------------------------------------------------------------');
         end
-        q2 = [q2, q_link2];
-        v2 = [v2, v_link2];
-        a2 = [a2, a_link2];
-        
-        if t < t_f(3)
-            [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t);
-        else
-            [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t_f(3)-0.001);
-            a_link3 = 0;
+    else
+        for joint = 1:1:4
+            [t_c(joint), t_f(joint)] = timeForLSPB2(abs(q_max(joint)), v_max(joint), a_max);
         end
-        q3 = [q3, q_link3];
-        v3 = [v3, v_link3];
-        a3 = [a3, a_link3];
-            
-        if t < t_f(4)
-            [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t);
-        else
-            [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t_f(4)-0.001);
-            a_link4 = 0;
+
+        t_f_max = max(t_f);
+        t_f_min = min(t_f);
+        factor = floor(t_f_max/t_f_min) + 1;
+        disp('time tf');
+        disp(t_f);
+        time = [];
+        for t = 0:t_f_min/50:(t_f_min*factor)
+            time = [time, t];
+            if t < t_f(1)
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB2(abs(q_max(1)), v_max(1), a_max, t_c(1), t_f(1), t);
+            else
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB2(abs(q_max(1)), v_max(1), a_max, t_c(1), t_f(1), t_f(1)-0.001);
+                a_link1 = 0;
+            end
+            q1 = [q1, q_link1];
+            v1 = [v1, v_link1];
+            a1 = [a1, a_link1];
+
+            if t < t_f(2)
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB2(abs(q_max(2)), v_max(2), a_max, t_c(2), t_f(2), t);
+            else
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB2(abs(q_max(2)), v_max(2), a_max, t_c(2), t_f(2), t_f(2)-0.001);
+                a_link2 = 0;
+            end
+            q2 = [q2, q_link2];
+            v2 = [v2, v_link2];
+            a2 = [a2, a_link2];
+
+            if t < t_f(3)
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB2(abs(q_max(3)), v_max(3), a_max, t_c(3), t_f(3), t);
+            else
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB2(abs(q_max(3)), v_max(3), a_max, t_c(3), t_f(3), t_f(3)-0.001);
+                a_link3 = 0;
+            end
+            q3 = [q3, q_link3];
+            v3 = [v3, v_link3];
+            a3 = [a3, a_link3];
+
+            if t < t_f(4)
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB2(abs(q_max(4)), v_max(4), a_max, t_c(4), t_f(4), t);
+            else
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB2(abs(q_max(4)), v_max(4), a_max, t_c(4), t_f(4), t_f(4)-0.001);
+                a_link4 = 0;
+            end
+            q4 = [q4, q_link4];
+            v4 = [v4, v_link4];
+            a4 = [a4, a_link4];
         end
-        q4 = [q4, q_link4];
-        v4 = [v4, v_link4];
-        a4 = [a4, a_link4];
-%         disp('time');
-%         disp(t);
-%         disp('-----------------------------------------------------------------------------------------------------');
     end
     for t = 1:length(time)
         x = x4_old + x4_diff*(q1(t)+q2(t)+q3(t)+q4(t))/(abs(q_max(1))+ abs(q_max(2))+abs(q_max(3))+abs(q_max(4)));
@@ -653,10 +707,6 @@ if ok ~= 0
         Draw_qva(handles.Theta4_q, handles.Theta4_v, handles.Theta4_a, q4(1:t), v4(1:t), a4(1:t), time(1:t));
         pause(0.3);
     end
-%     Draw_qva(handles.theta1_q, handles.theta1_v, handles.theta1_a, q1, v1, a1, time);
-%     Draw_qva(handles.Theta2_q, handles.Theta2_v, handles.Theta2_a, q2, v2, a2, time);
-%     Draw_qva(handles.d3_q, handles.d3_v, handles.d3_a, q3, v3, a3, time);
-%     Draw_qva(handles.Theta4_q, handles.Theta4_v, handles.Theta4_a, q4, v4, a4, time);
 else
     disp('out of range')
 end
@@ -802,3 +852,14 @@ function amax_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes when selected object is changed in select_trajectory_mode.
+function select_trajectory_mode_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in select_trajectory_mode 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global traj_mode
+btn = get(handles.select_trajectory_mode, 'SelectedObject');
+traj_mode = btn.String;
+disp(traj_mode);
