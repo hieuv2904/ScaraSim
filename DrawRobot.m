@@ -102,45 +102,53 @@ VeHinhTru(handles,line2(1,2),line2(2,2),line1(3,2)+0.072,0.06,0.2215,[0.7 0.7 0.
 VeHinhTru(handles,line4(1,2),line4(2,2),line4(3,2),0.02,-0.02,[0.4660 0.6740 0.1880])
 
 %% vẽ trục tọa độ
-%%% Line 1
+%%% Joint axis 0
+xUnitVectorLine1 = [0.1, 0] ;
+yUnitVectorLine1 = [0, 0.1];
+quiver3(0, 0, 0, xUnitVectorLine1(1), xUnitVectorLine1(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(0, 0, 0, yUnitVectorLine1(1), yUnitVectorLine1(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(0, 0, 0, 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
+
+
+%%% Joint axis 1
 xUnitVectorLine1 = [0.1*cos(o1(3)), 0.1*sin(o1(3))] ;
 yUnitVectorLine1 = [-xUnitVectorLine1(2), xUnitVectorLine1(1)];
-quiver3(line1(1,1), line1(2,1), line1(3,2), xUnitVectorLine1(1), xUnitVectorLine1(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line1(1,2), line1(2,2), line1(3,2), xUnitVectorLine1(1), xUnitVectorLine1(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1)+0.1, line1(2,1), line1(3,2)+0.1, 'x', 'Color', 'r', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line1(1,1), line1(2,1), line1(3,2), yUnitVectorLine1(1), yUnitVectorLine1(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line1(1,2), line1(2,2), line1(3,2), yUnitVectorLine1(1), yUnitVectorLine1(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1)+0.1, line1(3,2)+0.1, 'y', 'Color', 'b', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line1(1,1), line1(2,1), line1(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line1(1,2), line1(2,2), line1(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1), line1(3,2)+0.2, 'Z', 'Color', 'g', 'FontSize', 12, 'FontWeight', 'bold');
 
-%%% Line 2
+%%% Joint axis 2
 xUnitVectorLine2 = [0.1*cos(o2(3)), 0.1*sin(o2(3))];
 yUnitVectorLine2 = [-xUnitVectorLine2(2), xUnitVectorLine2(1)];
-quiver3(line2(1,1), line2(2,1), line2(3,2), xUnitVectorLine2(1), xUnitVectorLine2(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line2(1,2), line2(2,2), line2(3,2), xUnitVectorLine2(1), xUnitVectorLine2(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1)+0.1, line1(2,1), line1(3,2)+0.1, 'x', 'Color', 'r', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line2(1,1), line2(2,1), line2(3,2), yUnitVectorLine2(1), yUnitVectorLine2(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line2(1,2), line2(2,2), line2(3,2), yUnitVectorLine2(1), yUnitVectorLine2(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1)+0.1, line1(3,2)+0.1, 'y', 'Color', 'b', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line2(1,1), line2(2,1), line2(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line2(1,2), line2(2,2), line2(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1), line1(3,2)+0.2, 'Z', 'Color', 'g', 'FontSize', 12, 'FontWeight', 'bold');
 
-%%%Line 3
+%%%Joint axis 3
 %dLine3 = norm([line3(1,2)-line3(1,1), line3(2,2)-line3(2,1)]);
 xUnitVectorLine3 = [0.1*cos(o3(3)), 0.1*sin(o3(3))];
 yUnitVectorLine3 = [-xUnitVectorLine2(2), xUnitVectorLine2(1)];
-quiver3(line3(1,1), line3(2,1), line3(3,2), xUnitVectorLine3(1), xUnitVectorLine3(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line3(1,2), line3(2,2), line3(3,2), xUnitVectorLine3(1), xUnitVectorLine3(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1)+0.1, line1(2,1), line1(3,2)+0.1, 'x', 'Color', 'r', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line3(1,1), line3(2,1), line3(3,2), yUnitVectorLine3(1), yUnitVectorLine3(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line3(1,2), line3(2,2), line3(3,2), yUnitVectorLine3(1), yUnitVectorLine3(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1)+0.1, line1(3,2)+0.1, 'y', 'Color', 'b', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line3(1,1), line3(2,1), line3(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line3(1,2), line3(2,2), line3(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1), line1(3,2)+0.2, 'Z', 'Color', 'g', 'FontSize', 12, 'FontWeight', 'bold');
 
-%%%Line 4 
+%%%Joint axis 4 
 xUnitVectorLine4 = [0.1*cos(o4(3)), 0.1*sin(o4(3))];
-yUnitVectorLine4 = [-xUnitVectorLine4(2), xUnitVectorLine4(1)];
-quiver3(line4(1,1), line4(2,1), line4(3,2), xUnitVectorLine4(1), xUnitVectorLine4(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
+yUnitVectorLine4 = [xUnitVectorLine4(2), -xUnitVectorLine4(1)];
+quiver3(line4(1,1), line4(2,1), line4(3,2) - 0.02, xUnitVectorLine4(1), xUnitVectorLine4(2), 0, 'r', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1)+0.1, line1(2,1), line1(3,2)+0.1, 'x', 'Color', 'r', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line4(1,1), line4(2,1), line4(3,2), yUnitVectorLine4(1), yUnitVectorLine4(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line4(1,1), line4(2,1), line4(3,2) - 0.02, yUnitVectorLine4(1), yUnitVectorLine4(2), 0, 'b', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1)+0.1, line1(3,2)+0.1, 'y', 'Color', 'b', 'FontSize', 12, 'FontWeight', 'bold');
-quiver3(line4(1,1), line4(2,1), line4(3,2), 0, 0, 0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
+quiver3(line4(1,1), line4(2,1), line4(3,2) - 0.02, 0, 0, -0.1, 'g', 'LineWidth', 1, 'MaxHeadSize', 1);
 %text(line1(1,1), line1(2,1), line1(3,2)+0.2, 'Z', 'Color', 'g', 'FontSize', 12, 'FontWeight', 'bold');
 
 %% 

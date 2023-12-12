@@ -62,9 +62,9 @@ set(handles.qva_Theta2_panel,'Visible','off');
 set(handles.qva_d3_panel,'Visible','off');
 set(handles.qva_Theta4_panel,'Visible','off');
 
-global plot_pos;
+global traj_mode;
 
-plot_pos = [];
+traj_mode = '3 segment';
 
 % Choose default command line output for SCARASim
 handles.output = hObject;
@@ -511,7 +511,7 @@ global alpha a theta d working_limit pos orien traj_mode;
 % global t
 
 a_max = str2double(get(handles.amax,'String'));
-v_max = [660 660 1120 1500];
+v_max = [450*pi/180 450*pi/180 2000 1700*pi/180];
 q1 = [];
 q2 = [];
 q3 = [];
@@ -525,7 +525,6 @@ a2 = [];
 a3 = [];
 a4 = [];
 t_c = [];
-q_tc = [];
 t_f = [];
 
 x4_old = pos(4,1);
@@ -575,7 +574,7 @@ if ok ~= 0
 %     disp(q_max);
     if traj_mode == '3 segment'
         for joint = 1:1:4
-            [t_c(joint), q_tc(joint), t_f(joint)] = timeForLSPB(abs(q_max(joint)), v_max(joint), a_max);
+            [t_c(joint), t_f(joint)] = timeForLSPB(abs(q_max(joint)), v_max(joint), a_max);
         end
 
         t_f_max = max(t_f);
@@ -597,9 +596,9 @@ if ok ~= 0
     %         disp('length time');
     %         disp(length(time)-1);
             if t < t_f(1)
-                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t);
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), t_f(1), t);
             else
-                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), q_tc(1), t_f(1), t_f(1)-0.001);
+                [q_link1,v_link1,a_link1,v_max_link1] = LSPB(abs(q_max(1)), v_max(1), a_max, t_c(1), t_f(1), t_f(1)-0.001);
                 a_link1 = 0;
             end
             q1 = [q1, q_link1];
@@ -607,9 +606,9 @@ if ok ~= 0
             a1 = [a1, a_link1];
 
             if t < t_f(2)
-                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t);
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), t_f(2), t);
             else
-                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), q_tc(2), t_f(2), t_f(2)-0.001);
+                [q_link2,v_link2,a_link2,v_max_link2] = LSPB(abs(q_max(2)), v_max(2), a_max, t_c(2), t_f(2), t_f(2)-0.001);
                 a_link2 = 0;
             end
             q2 = [q2, q_link2];
@@ -617,9 +616,9 @@ if ok ~= 0
             a2 = [a2, a_link2];
 
             if t < t_f(3)
-                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t);
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), t_f(3), t);
             else
-                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), q_tc(3), t_f(3), t_f(3)-0.001);
+                [q_link3,v_link3,a_link3,v_max_link3] = LSPB(abs(q_max(3)), v_max(3), a_max, t_c(3), t_f(3), t_f(3)-0.001);
                 a_link3 = 0;
             end
             q3 = [q3, q_link3];
@@ -627,9 +626,9 @@ if ok ~= 0
             a3 = [a3, a_link3];
 
             if t < t_f(4)
-                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t);
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), t_f(4), t);
             else
-                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), q_tc(4), t_f(4), t_f(4)-0.001);
+                [q_link4,v_link4,a_link4,v_max_link4] = LSPB(abs(q_max(4)), v_max(4), a_max, t_c(4), t_f(4), t_f(4)-0.001);
                 a_link4 = 0;
             end
             q4 = [q4, q_link4];

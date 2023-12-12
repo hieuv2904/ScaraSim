@@ -1,5 +1,5 @@
 function [q,v,a,vmax] = LSPB2(qmax, vmax, amax, t_c, t_f, t)
-if vmax > sqrt(0.5*qmax*amax)-0.01
+if vmax > sqrt(0.5*qmax*amax)
     vmax = sqrt(0.5*qmax*amax);
 end
 
@@ -8,7 +8,7 @@ if t < t_c/2
     v = amax/t_c*t^2;
     a = 2/t_c*amax*t;
 elseif t < t_c
-    q = amax*t^2 - amax/(3*t_c)*t^3 - 1/2*amax*t_c*t + 1/12*amax*t_c^2;
+    q = amax*t^2 - amax/(3*t_c)*t^3 - amax*t_c*t/2 + amax*t_c^2/12;
     v = 2*amax*t - amax/t_c*t^2 - 1/2*amax*t_c;
     a = 2*amax - 2*amax*t/t_c;
 elseif t < t_f - t_c
